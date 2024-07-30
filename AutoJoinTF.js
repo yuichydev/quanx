@@ -1,8 +1,10 @@
 /*
 Script Author: Yui Chy
+Source: https://raw.githubusercontent.com/manhseo/TF_Trap/main/QX/AutoJoinTF.js
 */
 
 !(async () => {
+  // Lấy danh sách APP_ID từ lưu trữ
   let ids = $prefs.valueForKey("APP_ID");
   if (!ids) {
     $notify("Đã thêm tất cả TF", "Vui lòng đóng thủ công", "");
@@ -21,11 +23,12 @@ Script Author: Yui Chy
 })();
 
 function autoPost(ID) {
+  // Lấy key từ lưu trữ
   const key = $prefs.valueForKey("key");
   const testurl = `https://testflight.apple.com/v3/accounts/${key}/ru/${ID}`;
   const header = {
     "User-Agent": "Oasis/3.5.1 OasisBuild/425.2 iOS/17.5.1 model/iPhone14,3 hwp/t8110 build/21F90 (6; dt:256) AMS/1 TSE/0",
-    "Pragma: no-cache",
+    "Pragma": "no-cache",
     "Accept": "application/json",
     "Host": "testflight.apple.com",
     "X-Session-Id": $prefs.valueForKey("session_id"),
@@ -36,7 +39,7 @@ function autoPost(ID) {
     "X-Apple-TA-Device": "iPhone14,3 iPhone13,4",
     "X-Request-Id": $prefs.valueForKey("request_id"),
     "X-Apple-AMD-M": "0hYxEBrrJeJgrF1kj2jbNIFgwZXFN6VcVWdB1RgEsc48ptRUvUvzS8KKglTq1AFnJz9G6HUHybjPk7Km",
-    "Connection: keep-alive",
+    "Connection": "keep-alive",
     "Content-Type": "application/json",
     "X-Apple-Device-Model": "iPhone14,3"
   };
